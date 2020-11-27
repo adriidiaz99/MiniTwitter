@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { loginDto } from '../dto/login.dto';
 import { AutentService } from '../service/autent.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ export class LoginComponent implements OnInit {
   usuario: loginDto;
 
   // Inyección de dependencias
-  constructor(private authService: AutentService) { 
+  constructor(private authService: AutentService, public router: Router) { 
     this.usuario = new loginDto('', '');
   }
 
@@ -19,12 +20,9 @@ export class LoginComponent implements OnInit {
   }
 
   doLogin() {
-    // Llamar a un servicio que mande la petición de login
-    // a la API.
     this.authService.login(this.usuario).subscribe(respuesta => {
-      console.log(respuesta.token);
-      
-      alert('API TOKEN ' + respuesta.token);
+      this.authService.setToken(respuesta.token)
+      this.router.navigateByUrl('/');
     });
   }
 
